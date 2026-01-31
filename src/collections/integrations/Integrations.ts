@@ -1,12 +1,18 @@
 import type { CollectionConfig } from 'payload'
 import { AVAILABLE_CATEGORIES } from './integrations.const'
 import { validateSloganLength } from './integrations.service'
+import { authenticated } from '@/lib/access/authenticated'
 
 export const Integrations: CollectionConfig = {
   slug: 'integrations',
   admin: {
     useAsTitle: 'companyName',
     defaultColumns: ['companyName', 'category', 'slogan', 'createdAt'],
+  },
+  access: {
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   fields: [
     {

@@ -11,6 +11,9 @@ import { Posts } from './collections/Posts'
 import { FAQ } from './collections/FAQ'
 import { Integrations } from './collections/integrations/Integrations'
 
+import { en } from '@payloadcms/translations/languages/en'
+import { de } from '@payloadcms/translations/languages/de'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -23,7 +26,7 @@ export default buildConfig({
     autoLogin: {
       email: process.env.ADMIN_EMAIL,
       password: process.env.ADMIN_PASSWORD,
-    }
+    },
   },
   collections: [Users, Media, Posts, FAQ, Integrations],
   editor: lexicalEditor(),
@@ -38,4 +41,8 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  i18n: {
+    fallbackLanguage: 'en',
+    supportedLanguages: { en, de },
+  },
 })

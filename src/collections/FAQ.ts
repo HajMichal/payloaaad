@@ -1,10 +1,17 @@
 import type { CollectionConfig } from 'payload'
+import { authenticated } from '@/lib/access/authenticated'
 
 export const FAQ: CollectionConfig = {
   slug: 'faq',
   admin: {
     useAsTitle: 'category',
     defaultColumns: ['category', 'description', 'createdAt'],
+  },
+  access: {
+    read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   fields: [
     {

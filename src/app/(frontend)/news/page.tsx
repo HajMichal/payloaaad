@@ -23,46 +23,7 @@ export default async function NewsPage() {
 
   return (
     <div className="news-page">
-      <div className="container">
-        <h1>News</h1>
-        <div className="news-grid">
-          {posts.map((post) => {
-            const imageUrl =
-              typeof post.image === 'object' && post.image?.url
-                ? post.image.url
-                : '/placeholder.jpg'
-
-            return (
-              <article key={post.id} className="news-card">
-                <Link href={`/news/${post.slug}`}>
-                  <div className="image-wrapper">
-                    <Image
-                      src={imageUrl}
-                      alt={post.title || ''}
-                      width={400}
-                      height={250}
-                      className="news-image"
-                    />
-                  </div>
-                  <div className="content">
-                    <h2>{post.title}</h2>
-                    <p className="description">{post.description}</p>
-                    <div className="meta">
-                      {post.publishedAt && (
-                        <time dateTime={post.publishedAt}>
-                          {new Date(post.publishedAt).toLocaleDateString()}
-                        </time>
-                      )}
-                      {post.readTime && <span>{post.readTime} min read</span>}
-                    </div>
-                  </div>
-                </Link>
-              </article>
-            )
-          })}
-        </div>
-        {posts.length === 0 && <p>No news posts available.</p>}
-      </div>
+      <h1>News</h1>
     </div>
   )
 }

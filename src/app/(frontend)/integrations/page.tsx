@@ -16,7 +16,7 @@ export default async function IntegrationsPage({
   const categoryParam = searchParams.category
   const selectedCategory =
     categoryParam && AVAILABLE_CATEGORIES.includes(categoryParam)
-      ? (categoryParam)
+      ? categoryParam
       : AVAILABLE_CATEGORIES[0]
 
   const payload = await getPayloadInstance()
@@ -32,10 +32,9 @@ export default async function IntegrationsPage({
     sort: 'createdAt',
   })
 
-
   return (
     <div className="integrations-page">
-        <h1>Integrations</h1>
+      <h1>Integrations</h1>
     </div>
   )
 }

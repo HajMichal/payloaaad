@@ -17,7 +17,7 @@ export default async function FAQPage() {
 
   return (
     <div className="faq-page">
-        <h1>Frequently Asked Questions</h1>
+      <h1>Frequently Asked Questions</h1>
     </div>
   )
 }

@@ -8,7 +8,7 @@ export const metadata = {
 export default function TermsConditionsPage() {
   return (
     <div className="terms-conditions-page">
-        <h1>Terms & Conditions</h1>
+      <h1>Terms & Conditions</h1>
     </div>
   )
 }
