@@ -72,6 +72,7 @@ export interface Config {
     posts: Post;
     faq: Faq;
     integrations: Integration;
+    contact: Contact;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     faq: FaqSelect<false> | FaqSelect<true>;
     integrations: IntegrationsSelect<false> | IntegrationsSelect<true>;
+    contact: ContactSelect<false> | ContactSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -128,7 +130,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  roles: 'admin' | 'editor' | 'user';
+  roles: 'admin' | 'writer' | 'user';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -235,6 +237,33 @@ export interface Integration {
   createdAt: string;
 }
 /**
+ * Contact form submissions from the website
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact".
+ */
+export interface Contact {
+  id: number;
+  fullName: string;
+  email: string;
+  companyName: string;
+  phoneNumber: string;
+  /**
+   * Preferred time for the call
+   */
+  bookedCallTime: string;
+  /**
+   * Current status of the contact request
+   */
+  status: 'new' | 'contacted' | 'scheduled' | 'completed' | 'cancelled';
+  /**
+   * Internal notes about this contact (admin only)
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -277,6 +306,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'integrations';
         value: number | Integration;
+      } | null)
+    | ({
+        relationTo: 'contact';
+        value: number | Contact;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -402,6 +435,21 @@ export interface IntegrationsSelect<T extends boolean = true> {
   category?: T;
   companyName?: T;
   slogan?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact_select".
+ */
+export interface ContactSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  companyName?: T;
+  phoneNumber?: T;
+  bookedCallTime?: T;
+  status?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

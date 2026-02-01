@@ -10,6 +10,7 @@ import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
 import { FAQ } from './collections/FAQ'
 import { Integrations } from './collections/integrations/Integrations'
+import { Contact } from './collections/Contact'
 
 import { en } from '@payloadcms/translations/languages/en'
 import { de } from '@payloadcms/translations/languages/de'
@@ -28,7 +29,7 @@ export default buildConfig({
       password: process.env.ADMIN_PASSWORD,
     },
   },
-  collections: [Users, Media, Posts, FAQ, Integrations],
+  collections: [Users, Media, Posts, FAQ, Integrations, Contact],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

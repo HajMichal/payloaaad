@@ -94,7 +94,7 @@ export const Posts: CollectionConfig = {
       required: true,
       admin: {
         condition: ({ status }) => status === 'Published',
-        date: { pickerAppearance: 'dayOnly', displayFormat: 'MMM DD YYYY' },
+        date: { pickerAppearance: 'dayOnly', displayFormat: 'MMM dd yyyy' },
       },
     },
   ],

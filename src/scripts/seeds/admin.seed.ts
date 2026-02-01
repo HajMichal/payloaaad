@@ -1,42 +1,29 @@
-import { getPayload } from 'payload'
-import config from '@/payload.config'
-import z from 'zod'
-
-const payloadErrorSchema = z.object({
-  name: z.string(),
-  status: z.number(),
-  data: z.object({
-    collection: z.string(),
-    errors: z
-      .object({
-        message: z.string(),
-        path: z.string(),
-      })
-      .array(),
-  }),
-})
-
-type PayloadError = z.infer<typeof payloadErrorSchema>
-
-function isPayloadError(error: unknown): error is PayloadError {
-  return payloadErrorSchema.safeParse(error).success
-}
-
-function isDuplicateError(error: unknown): boolean {
-  if (!isPayloadError(error)) return false
-  return error.data.errors.some((err) => err.message.includes('already registered'))
-}
+import { getPayloadInstance } from '@/lib/payload'
 
 const adminEmail = process.env.ADMIN_EMAIL
 const adminPassword = process.env.ADMIN_PASSWORD
 
 export async function seedAdmin() {
-  const payload = await getPayload({ config })
+  const payload = await getPayloadInstance()
   if (!adminEmail || !adminPassword) {
     throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env file')
   }
 
   try {
+    // Check if admin already exists
+    const existing = await payload.find({
+      collection: 'users',
+      where: {
+        email: { equals: adminEmail },
+      },
+      limit: 1,
+    })
+
+    if (existing.docs.length > 0) {
+      console.log('Admin already seeded')
+      return existing.docs[0]
+    }
+
     const response = await payload.create({
       collection: 'users',
       data: {
@@ -45,12 +32,10 @@ export async function seedAdmin() {
         roles: 'admin',
       },
     })
-    console.log('Admin seeded successfully:', response)
+    console.log('Admin seeded successfully')
+    return response
   } catch (error) {
-    if (isDuplicateError(error)) {
-      console.log('Admin already seeded')
-      return
-    }
+    console.error('Error seeding admin:', error)
     throw error
   }
 }
