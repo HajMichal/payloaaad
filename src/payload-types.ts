@@ -230,7 +230,7 @@ export interface Integration {
   category: 'Truck OEMs' | 'Trailer OEMs' | 'Telematics' | 'TMS';
   companyName: string;
   /**
-   * Maximum 15 characters
+   * Maximum 20 characters
    */
   slogan: string;
   updatedAt: string;

@@ -10,6 +10,10 @@ export const Posts: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => {
+      if (user?.roles?.includes('admin') || user?.roles?.includes('writer')) {
+        return true
+      }
+      
       return {
         status: { equals: 'Published' },
       }
@@ -35,14 +39,14 @@ export const Posts: CollectionConfig = {
       },
       hooks: {
         beforeValidate: [
-          ({ data, operation, value }) => {
-            if (operation === 'create' && !value && data?.title) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
-            }
-            return value
+          ({ data, value }) => {
+            const sourceText = value || data?.title
+            if (!sourceText) return value
+
+            return sourceText
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/(^-|-$)/g, '')
           },
         ],
       },
@@ -91,7 +95,6 @@ export const Posts: CollectionConfig = {
     {
       name: 'publishedAt',
       type: 'date',
-      required: true,
       admin: {
         condition: ({ status }) => status === 'Published',
         date: { pickerAppearance: 'dayOnly', displayFormat: 'MMM dd yyyy' },

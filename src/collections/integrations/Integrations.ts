@@ -35,7 +35,7 @@ export const Integrations: CollectionConfig = {
       required: true,
       validate: validateSloganLength,
       admin: {
-        description: 'Maximum 15 characters',
+        description: 'Maximum 20 characters',
       },
     },
   ],
