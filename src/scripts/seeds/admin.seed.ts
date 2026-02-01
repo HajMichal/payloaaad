@@ -1,10 +1,11 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 
 const adminEmail = process.env.ADMIN_EMAIL
 const adminPassword = process.env.ADMIN_PASSWORD
 
 export async function seedAdmin() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
   if (!adminEmail || !adminPassword) {
     throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env file')
   }
@@ -29,7 +30,7 @@ export async function seedAdmin() {
       data: {
         email: adminEmail,
         password: adminPassword,
-        roles: 'admin',
+        roles: ['admin'],
       },
     })
     console.log('Admin seeded successfully')

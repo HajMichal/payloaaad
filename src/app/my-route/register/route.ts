@@ -1,23 +1,35 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { registerSchema } from '@/lib/validation/auth'
+import z from 'zod'
 
 export const POST = async (request: Request) => {
   try {
     const body = await request.json()
-    const { email, password } = body
 
-    if (!email || !password) {
+    const validationResult = registerSchema.safeParse(body)
+
+    if (!validationResult.success) {
       return Response.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
+        {
+          error: 'Validation failed',
+          details: z.treeifyError(validationResult.error),
+        },
+        { status: 400 },
       )
     }
+
+    const { email, password } = validationResult.data
 
     const payload = await getPayload({ config: configPromise })
 
     const user = await payload.create({
       collection: 'users',
-      data: { email, password, roles: "user" },
+      data: {
+        email,
+        password,
+        roles: ['user'],
+      },
     })
 
     return Response.json(
@@ -28,14 +40,11 @@ export const POST = async (request: Request) => {
           email: user.email,
         },
       },
-      { status: 201 }
+      { status: 201 },
     )
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Registration failed'
-    
-    return Response.json(
-      { error: message },
-      { status: 400 }
-    )
+
+    return Response.json({ error: message }, { status: 400 })
   }
 }

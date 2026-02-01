@@ -1,7 +1,8 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 
 export async function seedFAQ() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
   const faqData = [
     {

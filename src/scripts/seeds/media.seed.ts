@@ -1,4 +1,5 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -7,7 +8,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export async function seedMedia() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
   const existingSeeder = await payload.find({
     collection: 'media',

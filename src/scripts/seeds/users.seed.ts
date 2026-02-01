@@ -1,18 +1,23 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 
 export async function seedUsers() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
-  const usersData = [
+  const usersData: Array<{
+    email: string
+    password: string
+    roles: Array<'admin' | 'writer' | 'user'>
+  }> = [
     {
       email: 'writer1@example.com',
       password: 'password123',
-      roles: 'writer' as const,
+      roles: ['writer'],
     },
     {
       email: 'user3@example.com',
       password: 'password123',
-      roles: 'user' as const,
+      roles: ['user'],
     },
   ]
 

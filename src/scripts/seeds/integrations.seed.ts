@@ -1,8 +1,9 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import { AVAILABLE_CATEGORIES } from '@/collections/integrations/integrations.const'
 
 export async function seedIntegrations() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
   const integrationsData = [
     {

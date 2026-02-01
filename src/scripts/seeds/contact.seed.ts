@@ -1,8 +1,9 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import { Contact } from '@/payload-types'
 
 export async function seedContact() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
   const contactData: Omit<Contact, 'id' | 'updatedAt' | 'createdAt'>[] = [
     {

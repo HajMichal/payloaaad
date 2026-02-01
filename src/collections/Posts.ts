@@ -27,6 +27,7 @@ export const Posts: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
@@ -40,13 +41,21 @@ export const Posts: CollectionConfig = {
       hooks: {
         beforeValidate: [
           ({ data, value }) => {
-            const sourceText = value || data?.title
-            if (!sourceText) return value
+            if (value) {
+              return value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '')
+            }
 
-            return sourceText
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/(^-|-$)/g, '')
+            if (data?.title) {
+              return data.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '')
+            }
+
+            return value
           },
         ],
       },
@@ -55,11 +64,13 @@ export const Posts: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'content',
       type: 'richText',
       required: true,
+      localized: true,
     },
     {
       name: 'image',
@@ -86,19 +97,15 @@ export const Posts: CollectionConfig = {
       },
     },
     {
-      name: 'status',
-      type: 'select',
-      options: ['Draft', 'Published'],
-      defaultValue: 'Draft',
-      required: true,
-    },
-    {
       name: 'publishedAt',
       type: 'date',
       admin: {
-        condition: ({ status }) => status === 'Published',
         date: { pickerAppearance: 'dayOnly', displayFormat: 'MMM dd yyyy' },
       },
     },
   ],
+  timestamps: true,
+  versions: {
+    drafts: true,
+  },
 }

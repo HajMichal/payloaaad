@@ -19,11 +19,13 @@ export const FAQ: CollectionConfig = {
       type: 'text',
       required: true,
       index: true,
+      localized: true,
     },
     {
       name: 'description',
       type: 'textarea',
       required: true,
+      localized: true,
       admin: {
         description: 'Short description for the FAQ category',
       },
@@ -33,6 +35,7 @@ export const FAQ: CollectionConfig = {
       type: 'array',
       required: true,
       minRows: 1,
+      localized: true,
       fields: [
         {
           name: 'question',
@@ -48,4 +51,7 @@ export const FAQ: CollectionConfig = {
     },
   ],
   timestamps: true,
+  versions: {
+    drafts: true,
+  },
 }

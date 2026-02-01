@@ -33,6 +33,7 @@ export const Integrations: CollectionConfig = {
       name: 'slogan',
       type: 'text',
       required: true,
+      localized: true,
       validate: validateSloganLength,
       admin: {
         description: 'Maximum 20 characters',
@@ -40,4 +41,7 @@ export const Integrations: CollectionConfig = {
     },
   ],
   timestamps: true,
+  versions: {
+    drafts: true,
+  },
 }

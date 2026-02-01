@@ -94,10 +94,10 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'de') | ('en' | 'de')[];
   globals: {};
   globalsSelect: {};
-  locale: null;
+  locale: 'en' | 'de';
   user: User & {
     collection: 'users';
   };
@@ -130,7 +130,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  roles: 'admin' | 'writer' | 'user';
+  roles: ('admin' | 'writer' | 'user')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -197,10 +197,10 @@ export interface Post {
   };
   image: number | Media;
   readTime?: number | null;
-  status: 'Draft' | 'Published';
   publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -220,6 +220,7 @@ export interface Faq {
   }[];
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -235,6 +236,7 @@ export interface Integration {
   slogan: string;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Contact form submissions from the website
@@ -405,10 +407,10 @@ export interface PostsSelect<T extends boolean = true> {
   content?: T;
   image?: T;
   readTime?: T;
-  status?: T;
   publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -426,6 +428,7 @@ export interface FaqSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -437,6 +440,7 @@ export interface IntegrationsSelect<T extends boolean = true> {
   slogan?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

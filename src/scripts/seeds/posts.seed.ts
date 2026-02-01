@@ -1,8 +1,9 @@
-import { getPayloadInstance } from '@/lib/payload'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 import { Post } from '@/payload-types'
 
 export async function seedPosts() {
-  const payload = await getPayloadInstance()
+  const payload = await getPayload({ config })
 
   // First, get existing media for posts
   const mediaDocs = await payload.find({
@@ -70,7 +71,6 @@ export async function seedPosts() {
         },
       },
       image: mediaDocs.docs[0].id,
-      status: 'Draft' as const,
     },
     {
       title: 'The Future of Cloud Computing',
@@ -124,7 +124,6 @@ export async function seedPosts() {
         },
       },
       image: mediaDocs.docs[1]?.id || mediaDocs.docs[0].id,
-      status: 'Published' as const,
       publishedAt: new Date('2025-01-20').toString(),
     },
     {
@@ -179,7 +178,6 @@ export async function seedPosts() {
         },
       },
       image: mediaDocs.docs[2]?.id || mediaDocs.docs[0].id,
-      status: 'Draft' as const,
       publishedAt: new Date('2025-02-01').toString(),
     },
     {
@@ -234,7 +232,6 @@ export async function seedPosts() {
         },
       },
       image: mediaDocs.docs[3]?.id || mediaDocs.docs[0].id,
-      status: 'Published' as const,
       publishedAt: new Date('2025-01-25').toString(),
     },
     {
@@ -289,7 +286,6 @@ export async function seedPosts() {
         },
       },
       image: mediaDocs.docs[4]?.id || mediaDocs.docs[0].id,
-      status: 'Published' as const,
       publishedAt: new Date('2025-01-30').toString(),
     },
   ]

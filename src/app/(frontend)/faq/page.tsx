@@ -1,5 +1,5 @@
 import React from 'react'
-import { getPayloadInstance } from '@/lib/payload'
+import { getAllFAQs } from '@/lib/data/faq'
 
 export const metadata = {
   title: 'FAQ',
@@ -7,13 +7,7 @@ export const metadata = {
 }
 
 export default async function FAQPage() {
-  const payload = await getPayloadInstance()
-
-  const { docs: faqs } = await payload.find({
-    collection: 'faq',
-    limit: 100,
-    sort: 'createdAt',
-  })
+  const faqs = await getAllFAQs()
 
   return (
     <div className="faq-page">

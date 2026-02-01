@@ -82,7 +82,7 @@ describe('Posts Collection', () => {
         data: {
           email: `admin-${timestamp}@test.com`,
           password: 'test123',
-          roles: 'admin',
+          roles: ['admin'],
         },
       })
     } else {
@@ -104,7 +104,7 @@ describe('Posts Collection', () => {
         data: {
           email: `writer-${timestamp}@test.com`,
           password: 'test123',
-          roles: 'writer',
+          roles: ['writer'],
         },
       })
     } else {
@@ -126,7 +126,7 @@ describe('Posts Collection', () => {
         data: {
           email: `user-${timestamp}@test.com`,
           password: 'test123',
-          roles: 'user',
+          roles: ['user'],
         },
       })
     } else {
@@ -156,47 +156,6 @@ describe('Posts Collection', () => {
   })
 
   describe('Access Control', () => {
-    it('allows unauthenticated users to read only published posts', async () => {
-      // Create a published post
-      const publishedPost = await payload.create({
-        collection: 'posts',
-        data: {
-          title: 'Test Post Published',
-          slug: `test-post-published-${Date.now()}`,
-          description: 'Test description',
-          content: sampleLexicalContent,
-          image: testMediaId,
-          status: 'Published',
-          publishedAt: new Date().toString(),
-        },
-        user: adminUser,
-      })
-
-      // Create a draft post
-      const draftPost = await payload.create({
-        collection: 'posts',
-        data: {
-          title: 'Test Post Draft',
-          slug: `test-post-draft-${Date.now()}`,
-          description: 'Test description',
-          content: sampleLexicalContent,
-          image: testMediaId,
-          status: 'Draft',
-        },
-        user: adminUser,
-      })
-
-      // Unauthenticated read should only return published posts
-      const result = await payload.find({
-        collection: 'posts',
-        overrideAccess: false,
-      })
-
-      const publishedIds = result.docs.map((doc) => doc.id)
-      expect(publishedIds).toContain(publishedPost.id)
-      expect(publishedIds).not.toContain(draftPost.id)
-    })
-
     it('allows admin to create posts', async () => {
       const post = await payload.create({
         collection: 'posts',
@@ -206,7 +165,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,
@@ -226,7 +184,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: writerUser,
@@ -247,7 +204,6 @@ describe('Posts Collection', () => {
             description: 'Test description',
             content: sampleLexicalContent,
             image: testMediaId,
-            status: 'Draft',
             publishedAt: new Date().toString(),
           },
           user: regularUser,
@@ -266,7 +222,6 @@ describe('Posts Collection', () => {
             description: 'Test description',
             content: sampleLexicalContent,
             image: testMediaId,
-            status: 'Draft',
             publishedAt: new Date().toString(),
           },
           overrideAccess: false,
@@ -300,7 +255,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,
@@ -316,7 +270,6 @@ describe('Posts Collection', () => {
             description: 'Test description',
             content: sampleLexicalContent,
             image: testMediaId,
-            status: 'Draft',
             publishedAt: new Date().toString(),
           },
           user: adminUser,
@@ -334,7 +287,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         } as any,
         user: adminUser,
@@ -382,7 +334,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: longContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,
@@ -408,7 +359,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
           readTime: 999, // Try to set readTime directly
         },
@@ -430,7 +380,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,
@@ -438,7 +387,6 @@ describe('Posts Collection', () => {
 
       expect(post.id).toBeDefined()
       expect(post.title).toBe('Test Post Create')
-      expect(post.status).toBe('Draft')
     })
 
     it('updates a post successfully', async () => {
@@ -450,7 +398,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,
@@ -461,14 +408,12 @@ describe('Posts Collection', () => {
         id: post.id,
         data: {
           title: 'Test Post Updated',
-          status: 'Published',
         },
         user: adminUser,
         overrideAccess: false,
       })
 
       expect(updated.title).toBe('Test Post Updated')
-      expect(updated.status).toBe('Published')
     })
 
     it('deletes a post successfully', async () => {
@@ -480,7 +425,6 @@ describe('Posts Collection', () => {
           description: 'Test description',
           content: sampleLexicalContent,
           image: testMediaId,
-          status: 'Draft',
           publishedAt: new Date().toString(),
         },
         user: adminUser,

@@ -3,7 +3,7 @@ export const validateSloganLength = (value: string | null | undefined) => {
 
   const length = value.trim().length
   if (length > 20) {
-    return `Slogan must be maximum 15 characters. Current: ${length} characters.`
+    return `Slogan must be maximum 20 characters. Current: ${length} characters.`
   }
 
   return true

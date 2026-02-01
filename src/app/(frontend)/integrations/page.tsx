@@ -1,5 +1,5 @@
 import React from 'react'
-import { getPayloadInstance } from '@/lib/payload'
+import { getIntegrations } from '@/lib/data/integrations'
 import { IntegrationCategory } from '@/collections/integrations/integrations.type'
 import { AVAILABLE_CATEGORIES } from '@/collections/integrations/integrations.const'
 
@@ -11,26 +11,16 @@ export const metadata = {
 export default async function IntegrationsPage({
   searchParams,
 }: {
-  searchParams: { category?: IntegrationCategory }
+  searchParams: Promise<{ category?: IntegrationCategory }>
 }) {
-  const categoryParam = searchParams.category
+  const params = await searchParams
+  const categoryParam = params.category
   const selectedCategory =
     categoryParam && AVAILABLE_CATEGORIES.includes(categoryParam)
       ? categoryParam
       : AVAILABLE_CATEGORIES[0]
 
-  const payload = await getPayloadInstance()
-
-  const { docs: integrations } = await payload.find({
-    collection: 'integrations',
-    where: {
-      category: {
-        equals: selectedCategory,
-      },
-    },
-    limit: 100,
-    sort: 'createdAt',
-  })
+  const integrations = await getIntegrations({ category: selectedCategory })
 
   return (
     <div className="integrations-page">
