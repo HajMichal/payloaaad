@@ -1,6 +1,6 @@
-import { Post } from "@/payload-types"
-import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintext"
-import { FieldHook } from "payload"
+import { Post } from '@/payload-types'
+import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { FieldHook } from 'payload'
 
 const countWords = (text?: string | null): number => {
     if (!text) return 0
