@@ -5,7 +5,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
+import { Users } from './collections/users/Users'
 import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
 import { FAQ } from './collections/FAQ'
@@ -14,6 +14,7 @@ import { Contact } from './collections/Contact'
 
 import { en } from '@payloadcms/translations/languages/en'
 import { de } from '@payloadcms/translations/languages/de'
+import { Settings } from './globals/Settings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,6 +31,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Posts, FAQ, Integrations, Contact],
+  globals: [Settings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -50,4 +52,7 @@ export default buildConfig({
     fallbackLanguage: 'en',
     supportedLanguages: { en, de },
   },
+  csrf: [
+    process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+  ]
 })

@@ -1,1 +1,1 @@
-export type LocaleCode = 'en' | 'de' | 'all'
+export type LocaleCode = 'en' | 'de'

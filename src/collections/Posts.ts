@@ -1,12 +1,13 @@
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 import type { CollectionConfig } from 'payload'
 import { adminOrWriter } from '@/lib/access/adminOrWriter'
+import slugify from 'slugify'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'status', 'publishedAt', 'updatedAt'],
+    defaultColumns: ['title', '_status', 'publishedAt', 'updatedAt'],
   },
   access: {
     read: ({ req: { user } }) => {
@@ -15,7 +16,7 @@ export const Posts: CollectionConfig = {
       }
       
       return {
-        status: { equals: 'Published' },
+        _status: { equals: 'published' },
       }
     },
     create: adminOrWriter,
@@ -42,17 +43,11 @@ export const Posts: CollectionConfig = {
         beforeValidate: [
           ({ data, value }) => {
             if (value) {
-              return value
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+              return slugify(value, { lower: true, strict: true })
             }
 
             if (data?.title) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
+              return slugify(value, { lower: true, strict: true })
             }
 
             return value

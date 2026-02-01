@@ -40,7 +40,6 @@ next-env.d.ts
 
 .env
 
-/media
 
 # Playwright
 node_modules/
@@ -49,4 +48,4 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 webalize.db
-./webalize.db
+*.db

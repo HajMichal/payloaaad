@@ -13,10 +13,10 @@ export const getPostBySlug = cache(
       const { docs } = await payload.find({
         collection: 'posts',
         where: {
-          and: [{ slug: { equals: slug } }, { status: { equals: 'Published' } }],
+          and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
         },
         limit: 1,
-        depth: 1,
+        depth: 0,
         locale,
       })
 
@@ -45,9 +45,7 @@ export const getAllPublishedPosts = cache(
 
       const result = await payload.find({
         collection: 'posts',
-        where: {
-          status: { equals: 'Published' },
-        },
+        where: { _status: { equals: 'published' } },
         page,
         limit,
         depth: 0,

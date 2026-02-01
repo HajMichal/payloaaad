@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/lib/access/adminOnly'
 import { adminOrSelf } from '@/lib/access/adminOrSelf'
+import { resetPasswordTemplate, verifyEmailTemplate } from './emailTemplates'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -8,7 +9,35 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
     defaultColumns: ['email', 'roles', 'createdAt'],
   },
-  auth: true,
+
+  // In  the real world application I would split this collection into two: one for casual users and one for admins/editors.
+  auth: {
+     verify: {
+      generateEmailHTML: ({ token, user }) => {
+        return verifyEmailTemplate(token, user.email)
+      },
+      generateEmailSubject: () => 'Verify your email',
+    },
+
+    forgotPassword: {
+      generateEmailHTML: (data) => {
+        if (!data?.token) return ''
+        return resetPasswordTemplate(data.token, data.user.email)
+      },
+      generateEmailSubject: () => 'Reset your password',
+    },
+
+    maxLoginAttempts: 5,
+    lockTime: 600 * 1000, // 10 minutes
+
+    tokenExpiration: 7200, // 2 hours (in seconds)
+
+    cookies: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Lax',
+    },
+    
+  },
   access: {
     create: () => true,
     read: adminOrSelf,
