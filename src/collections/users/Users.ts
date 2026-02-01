@@ -10,7 +10,7 @@ export const Users: CollectionConfig = {
     defaultColumns: ['email', 'roles', 'createdAt'],
   },
 
-  // In  the real world application I would split this collection into two: one for casual users and one for admins/editors.
+  // In  the production application I would split this collection into two: one for casual users and one for admins/editors.
   auth: {
      verify: {
       generateEmailHTML: ({ token, user }) => {

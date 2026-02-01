@@ -1,7 +1,12 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 import type { CollectionConfig } from 'payload'
 import { adminOrWriter } from '@/lib/access/adminOrWriter'
 import slugify from 'slugify'
+
+import { QuoteBlock } from '@/blocks/Quote'
+import { CustomListBlock } from '@/blocks/List'
+import { ImageBlock } from '@/blocks/Image'
+import { RichTextBlock } from '@/blocks/RichText'
+import { calculateReadTimeHook } from './posts.service'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -47,7 +52,7 @@ export const Posts: CollectionConfig = {
             }
 
             if (data?.title) {
-              return slugify(value, { lower: true, strict: true })
+              return slugify(data.title, { lower: true, strict: true })
             }
 
             return value
@@ -63,9 +68,10 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'content',
-      type: 'richText',
+      type: 'blocks',
       required: true,
       localized: true,
+      blocks: [QuoteBlock, CustomListBlock, ImageBlock, RichTextBlock],
     },
     {
       name: 'image',
@@ -76,19 +82,13 @@ export const Posts: CollectionConfig = {
     {
       name: 'readTime',
       type: 'number',
-      defaultValue: 0,
+      defaultValue: 5,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+      },
       hooks: {
-        beforeChange: [({ siblingData }) => delete siblingData.readTime],
-        afterRead: [
-          ({ data }) => {
-            if (!data) return 0
-
-            const text = convertLexicalToPlaintext({ data: data.content })
-            const words = text.trim().split(/\s+/).length
-
-            return Math.max(1, Math.ceil(words / 200))
-          },
-        ],
+        beforeChange: [calculateReadTimeHook],
       },
     },
     {

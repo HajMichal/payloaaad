@@ -288,6 +288,7 @@ describe('Posts Collection', () => {
           content: sampleLexicalContent,
           image: testMediaId,
           publishedAt: new Date().toString(),
+        // Missing slug - should be generated
         } as any,
         user: adminUser,
       })

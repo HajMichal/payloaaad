@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { adminOrWriter } from '@/lib/access/adminOrWriter'
+import { FaqSectionBlock } from '@/blocks/FAQsection'
 
 export const FAQ: CollectionConfig = {
   slug: 'faq',
@@ -31,23 +32,12 @@ export const FAQ: CollectionConfig = {
       },
     },
     {
-      name: 'items',
-      type: 'array',
+      name: 'content',
+      type: 'blocks',
       required: true,
-      minRows: 1,
       localized: true,
-      fields: [
-        {
-          name: 'question',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'answer',
-          type: 'textarea',
-          required: true,
-        },
-      ],
+      minRows: 1,
+      blocks: [FaqSectionBlock],
     },
   ],
   timestamps: true,

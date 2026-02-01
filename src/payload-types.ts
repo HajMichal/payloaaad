@@ -138,6 +138,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -180,21 +182,58 @@ export interface Post {
    */
   slug: string;
   description: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  content: (
+    | {
+        quoteContent: string;
+        authorName: string;
+        authorRole?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'quote';
+      }
+    | {
+        /**
+         * Select list style
+         */
+        type?: ('arrow' | 'number') | null;
+        items?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'customList';
+      }
+    | {
+        media?: (number | null) | Media;
+        caption?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'image';
+      }
+    | {
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'richText';
+      }
+  )[];
   image: number | Media;
   readTime?: number | null;
   publishedAt?: string | null;
@@ -213,10 +252,31 @@ export interface Faq {
    * Short description for the FAQ category
    */
   description: string;
-  items: {
-    question: string;
-    answer: string;
+  content: {
+    questions?:
+      | {
+          question: string;
+          answer?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
     id?: string | null;
+    blockName?: string | null;
+    blockType: 'faqSection';
   }[];
   updatedAt: string;
   createdAt: string;
@@ -368,6 +428,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -404,7 +466,47 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   description?: T;
-  content?: T;
+  content?:
+    | T
+    | {
+        quote?:
+          | T
+          | {
+              quoteContent?: T;
+              authorName?: T;
+              authorRole?: T;
+              id?: T;
+              blockName?: T;
+            };
+        customList?:
+          | T
+          | {
+              type?: T;
+              items?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        image?:
+          | T
+          | {
+              media?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        richText?:
+          | T
+          | {
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   image?: T;
   readTime?: T;
   publishedAt?: T;
@@ -419,12 +521,22 @@ export interface PostsSelect<T extends boolean = true> {
 export interface FaqSelect<T extends boolean = true> {
   category?: T;
   description?: T;
-  items?:
+  content?:
     | T
     | {
-        question?: T;
-        answer?: T;
-        id?: T;
+        faqSection?:
+          | T
+          | {
+              questions?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

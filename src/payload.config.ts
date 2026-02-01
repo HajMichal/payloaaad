@@ -7,7 +7,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/users/Users'
 import { Media } from './collections/Media'
-import { Posts } from './collections/Posts'
+import { Posts } from './collections/posts/Posts'
 import { FAQ } from './collections/FAQ'
 import { Integrations } from './collections/integrations/Integrations'
 import { Contact } from './collections/Contact'
