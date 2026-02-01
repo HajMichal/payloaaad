@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { authenticated } from '@/lib/access/authenticated'
+import { adminOrWriter } from '@/lib/access/adminOrWriter'
 
 export const FAQ: CollectionConfig = {
   slug: 'faq',
@@ -9,9 +9,9 @@ export const FAQ: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    create: adminOrWriter,
+    update: adminOrWriter,
+    delete: adminOrWriter,
   },
   fields: [
     {

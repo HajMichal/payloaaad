@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { AVAILABLE_CATEGORIES } from './integrations.const'
 import { validateSloganLength } from './integrations.service'
-import { authenticated } from '@/lib/access/authenticated'
+import { adminOrWriter } from '@/lib/access/adminOrWriter'
 
 export const Integrations: CollectionConfig = {
   slug: 'integrations',
@@ -10,9 +10,10 @@ export const Integrations: CollectionConfig = {
     defaultColumns: ['companyName', 'category', 'slogan', 'createdAt'],
   },
   access: {
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    read: () => true,
+    create: adminOrWriter,
+    update: adminOrWriter,
+    delete: adminOrWriter,
   },
   fields: [
     {

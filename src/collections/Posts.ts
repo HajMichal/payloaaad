@@ -1,6 +1,6 @@
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 import type { CollectionConfig } from 'payload'
-import { authenticated } from '@/lib/access/authenticated'
+import { adminOrWriter } from '@/lib/access/adminOrWriter'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -10,14 +10,13 @@ export const Posts: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => {
-      if (user) return true
       return {
         status: { equals: 'Published' },
       }
     },
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    create: adminOrWriter,
+    update: adminOrWriter,
+    delete: adminOrWriter,
   },
   fields: [
     {
