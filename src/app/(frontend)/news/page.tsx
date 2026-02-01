@@ -1,7 +1,5 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import { getAllPublishedPosts } from '@/lib/data/posts'
 import React from 'react'
-import { getPayloadInstance } from '@/lib/payload'
 
 export const metadata = {
   title: 'News',
@@ -9,18 +7,7 @@ export const metadata = {
 }
 
 export default async function NewsPage() {
-  const payload = await getPayloadInstance()
-
-  const { docs: posts } = await payload.find({
-    collection: 'posts',
-    where: {
-      status: { equals: 'Published' },
-    },
-    limit: 20,
-    sort: '-publishedAt',
-    depth: 1,
-  })
-
+  const { posts, totalDocs, totalPages, page } = await getAllPublishedPosts()
   return (
     <div className="news-page">
       <h1>News</h1>

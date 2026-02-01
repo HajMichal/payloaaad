@@ -17,20 +17,36 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
   return docs[0] || null
 })
 
-export async function getAllPublishedPosts() {
+const POSTS_PER_PAGE = 20
+
+interface GetAllPublishedPostsOptions {
+  page?: number
+  limit?: number
+}
+
+export async function getAllPublishedPosts(options: GetAllPublishedPostsOptions = {}) {
+  const { page = 1, limit = POSTS_PER_PAGE } = options
   const payload = await getPayloadInstance()
 
-  const { docs: posts } = await payload.find({
+  const result = await payload.find({
     collection: 'posts',
     where: {
       status: { equals: 'Published' },
     },
-    limit: 100,
+    page,
+    limit,
     depth: 0,
     select: {
       slug: true,
     },
   })
 
-  return posts
+  return {
+    posts: result.docs,
+    totalDocs: result.totalDocs,
+    totalPages: result.totalPages,
+    page: result.page,
+    hasNextPage: result.hasNextPage,
+    hasPrevPage: result.hasPrevPage,
+  }
 }
