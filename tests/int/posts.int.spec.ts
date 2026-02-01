@@ -1,42 +1,48 @@
 import { getPayload, Payload } from 'payload'
 import config from '@/payload.config'
 import { describe, it, beforeAll, expect, beforeEach, afterEach } from 'vitest'
+import { Post, User } from '@/payload-types'
 
 let payload: Payload
 let testMediaId: number
-let adminUser: any
-let writerUser: any
-let regularUser: any
+let adminUser: User
+let writerUser: User
+let regularUser: User
 
-const sampleLexicalContent: any = {
-  root: {
-    children: [
-      {
+const sampleLexicalContent: Post['content'] = [
+  {
+    blockType: 'richText',
+    content: {
+      root: {
         children: [
           {
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text: 'This is a test post content with enough words to calculate read time properly.',
-            type: 'text',
+            children: [
+              {
+                detail: 0,
+                format: 0,
+                mode: 'normal',
+                style: '',
+                text: 'This is a test post content with enough words to calculate read time properly.',
+                type: 'text',
+                version: 1,
+              },
+            ],
+            direction: 'ltr',
+            format: '',
+            indent: 0,
+            type: 'paragraph',
             version: 1,
           },
         ],
         direction: 'ltr',
         format: '',
         indent: 0,
-        type: 'paragraph',
+        type: 'root',
         version: 1,
       },
-    ],
-    direction: 'ltr',
-    format: '',
-    indent: 0,
-    type: 'root',
-    version: 1,
+    },
   },
-}
+]
 
 describe('Posts Collection', () => {
   beforeAll(async () => {
@@ -297,35 +303,40 @@ describe('Posts Collection', () => {
     })
 
     it('calculates readTime based on content word count', async () => {
-      const longContent: any = {
-        root: {
-          children: [
-            {
+      const longContent: any = [
+        {
+          blockType: 'richText',
+          content: {
+            root: {
               children: [
                 {
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: Array(500).fill('word').join(' '), // 500 words
-                  type: 'text',
+                  children: [
+                    {
+                      detail: 0,
+                      format: 0,
+                      mode: 'normal',
+                      style: '',
+                      text: Array(500).fill('word').join(' '), // 500 words
+                      type: 'text',
+                      version: 1,
+                    },
+                  ],
+                  direction: 'ltr',
+                  format: '',
+                  indent: 0,
+                  type: 'paragraph',
                   version: 1,
                 },
               ],
               direction: 'ltr',
               format: '',
               indent: 0,
-              type: 'paragraph',
+              type: 'root',
               version: 1,
             },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'root',
-          version: 1,
+          },
         },
-      }
+      ]
 
       const post = await payload.create({
         collection: 'posts',
