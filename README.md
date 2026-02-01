@@ -7,7 +7,7 @@ A modern CMS application built with Payload CMS 3.0 and Next.js 15, featuring se
 ### Prerequisites
 
 - **Node.js**: `^18.20.2 || >=20.9.0`
-- **pnpm**: `^9 || ^10` (required package manager)
+- **npm**: `^10 || ^11` 
 - **Git**: For cloning the repository
 
 ### Installation
