@@ -14,7 +14,6 @@ import { Contact } from './collections/Contact'
 
 import { en } from '@payloadcms/translations/languages/en'
 import { de } from '@payloadcms/translations/languages/de'
-import { Settings } from './globals/Settings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +30,6 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Posts, FAQ, Integrations, Contact],
-  globals: [Settings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

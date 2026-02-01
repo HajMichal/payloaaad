@@ -1,67 +1,234 @@
-# Payload Blank Template
+# Webalize
 
-This template comes configured with the bare minimum to get started on anything you need.
+A modern CMS application built with Payload CMS 3.0 and Next.js 15, featuring server-side rendering, internationalization, and comprehensive content management capabilities.
 
-## Quick start
+## 🚀 Quick Start
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+### Prerequisites
 
-## Quick Start - local setup
+- **Node.js**: `^18.20.2 || >=20.9.0`
+- **pnpm**: `^9 || ^10` (required package manager)
+- **Git**: For cloning the repository
 
-To spin up this template locally, follow these steps:
+### Installation
 
-### Clone
+1. **Clone the repository**
+   ```bash
+   git clone git@github.com:HajMichal/payloaaad.git
+   cd webalize
+   ```
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-### Development
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+4. **Configure environment variables**
+   
+   Edit the `.env` file with your configuration:
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+   ```env
+   # Database Configuration
+   # For SQLite (default):
+   DATABASE_URL=file:./webalize.db
+   
+   # For MongoDB (alternative):
+   # DATABASE_URL=mongodb://127.0.0.1/webalize
+   
+   # Payload Secret (required)
+   # Generate a secure random string for production
+   PAYLOAD_SECRET=your-super-secret-key-change-this-in-production
+   
+   # Admin Auto-Login (optional, for development only)
+   ADMIN_EMAIL=admin@example.com
+   ADMIN_PASSWORD=password
+   
+   # Public URL (required for CSRF protection)
+   NEXT_PUBLIC_URL=http://localhost:3000
+   ```
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+   **Important Notes:**
+   - `PAYLOAD_SECRET`: Use a strong random string in production (minimum 32 characters recommended)
+   - `DATABASE_URL`: The project is configured to use SQLite by default. Change to MongoDB URL if needed
+   - `ADMIN_EMAIL` & `ADMIN_PASSWORD`: Only used for auto-login in development. Remove in production
+   - `NEXT_PUBLIC_URL`: Must match your actual domain in production
 
-#### Docker (Optional)
+5. **Generate TypeScript types**
+   ```bash
+   pnpm generate:types
+   ```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+6. **Generate import map** (if using custom components)
+   ```bash
+   pnpm generate:importmap
+   ```
 
-To do so, follow these steps:
+## 🏃 Running the Project
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+### Development Mode
 
-## How it works
+Start the development server:
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+```bash
+ pnpm dev
+```
 
-### Collections
+The application will be available at:
+- **Frontend**: http://localhost:3000
+- **Admin Panel**: http://localhost:3000/admin
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+### Seed Database (Optional)
 
-- #### Users (Authentication)
+Populate the database with sample data:
 
-  Users are auth-enabled collections that have access to the admin panel.
+```bash
+pnpm seed
+```
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+This will create:
+- Admin user
+- Sample users (admin, writer, regular user)
+- Media files
+- Sample posts
+- FAQ entries
+- Integration partners
+- Contact submissions
 
-- #### Media
+**Note**: Make sure you have media files uploaded through the admin panel before seeding posts, or the seed script will skip posts.
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+### Production Build
 
-### Docker
+1. **Build the application**
+   ```bash
+   pnpm build
+   ```
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+2. **Start production server**
+   ```bash
+   pnpm start
+   ```
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+## 🧪 Testing
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+### Run all tests
+```bash
+pnpm test
+```
 
-## Questions
+### Run integration tests only
+```bash
+pnpm test:int
+```
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+
+**Note**: E2E tests require the dev server to be running. Playwright will start it automatically.
+
+## 📁 Project Structure
+
+```
+webalize/
+├── src/
+│   ├── app/
+│   │   ├── (frontend)/          # Frontend routes (Server Components)
+│   │   │   ├── page.tsx         # Homepage
+│   │   │   ├── news/            # News listing and detail pages
+│   │   │   ├── faq/             # FAQ page
+│   │   │   ├── integrations/    # Integrations page
+│   │   │   └── ...
+│   │   └── (payload)/           # Payload admin routes
+│   │       └── admin/           # Admin panel
+│   ├── collections/             # Payload collections
+│   │   ├── users/              # Users collection (auth-enabled)
+│   │   ├── Posts.ts            # Blog posts
+│   │   ├── FAQ.ts              # FAQ entries
+│   │   ├── Integrations.ts     # Integration partners
+│   │   ├── Contact.ts          # Contact form submissions
+│   │   └── Media.ts            # Media uploads
+│   ├── globals/                 # Payload globals
+│   │   └── Settings.ts         # Site settings
+│   ├── lib/
+│   │   ├── access/             # Access control functions
+│   │   ├── data/               # Data fetching functions (Server Components)
+│   │   ├── types/              # TypeScript types
+│   │   └── validation/         # Zod validation schemas
+│   ├── scripts/                # Seed scripts
+│   └── payload.config.ts       # Payload configuration
+├── tests/
+│   ├── int/                    # Integration tests
+│   └── e2e/                    # E2E tests
+└── package.json
+```
+
+## 🔐 Access Control
+
+The application implements role-based access control (RBAC):
+
+- **Admin**: Full access to all collections
+- **Writer**: Can create/edit posts, FAQs, integrations
+- **User**: Can only read published content
+
+## 🌍 Internationalization
+
+The application supports multiple locales:
+- **English (en)** - Default
+- **German (de)**
+
+Localized collections:
+- Posts (title, description, content)
+- FAQ (category, description, items)
+- Integrations (slogan)
+
+
+## 📝 Environment Variables Reference
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `DATABASE_URL` | Yes | Database connection string | `file:./webalize.db` (SQLite) or `mongodb://127.0.0.1/webalize` (MongoDB) |
+| `PAYLOAD_SECRET` | Yes | Secret key for JWT encryption | Random 32+ character string |
+| `ADMIN_EMAIL` | No | Auto-login email (dev only) | `admin@example.com` |
+| `ADMIN_PASSWORD` | No | Auto-login password (dev only) | `password` |
+| `NEXT_PUBLIC_URL` | Yes | Public URL for CSRF protection | `http://localhost:3000` |
+
+
+## 🔧 Development Tips
+
+1. **After modifying collections**: Always run `pnpm generate:types` to update TypeScript types
+2. **After adding custom components**: Run `pnpm generate:importmap` to update the import map
+3. **Database location**: SQLite database is stored at `./webalize.db` (gitignored)
+4. **Type checking**: Run `tsc --noEmit` to validate TypeScript without building
+
+## 📚 Key Features
+
+- ✅ Server Components (Next.js App Router)
+- ✅ Payload CMS 3.0 with Lexical editor
+- ✅ Role-based access control
+- ✅ Internationalization (i18n)
+- ✅ Draft & versioning system
+- ✅ Media uploads with Sharp image processing
+- ✅ GraphQL API (auto-generated)
+- ✅ REST API (auto-generated)
+- ✅ Comprehensive test coverage
+
+## 🚨 Troubleshooting
+
+### Database locked error (SQLite)
+- Make sure no other process is accessing the database
+- Check if the dev server is already running
+
+### Type errors after schema changes
+- Run `pnpm generate:types` to regenerate types
+
+### Import map errors
+- Run `pnpm generate:importmap` after adding custom components
+
+### Port 3000 already in use
+- Change the port: `PORT=3001 pnpm dev`
+- Or stop the process using port 3000
+
+
+
